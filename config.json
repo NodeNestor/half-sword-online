@@ -1,0 +1,46 @@
+{
+    "server": {
+        "port": 8080,
+        "max_players": 8
+    },
+    "video": {
+        "codec": "h264",
+        "encoder": "h264_nvenc",
+        "preset": "p1",
+        "tune": "ull",
+        "bitrate_kbps": 15000,
+        "max_bitrate_kbps": 25000,
+        "gop_size": 120,
+        "bframes": 0,
+        "rc_mode": "cbr",
+        "default_width": 1920,
+        "default_height": 1080,
+        "default_fps": 60,
+        "adaptive_bitrate": true,
+        "min_bitrate_kbps": 3000
+    },
+    "audio": {
+        "device_name": "Stereo Mix",
+        "bitrate_kbps": 128,
+        "sample_rate": 48000,
+        "channels": 2
+    },
+    "network": {
+        "fec_enabled": true,
+        "fec_group_size": 10,
+        "fec_percentage": 20,
+        "keepalive_interval_ms": 1000,
+        "connection_timeout_ms": 5000
+    },
+    "input": {
+        "mouse_sensitivity_x": 5.0,
+        "mouse_sensitivity_y": 5.0,
+        "mouse_decay": 0.8,
+        "gamepad_deadzone": 0.15
+    },
+    "mod": {
+        "bridge_poll_interval_frames": 30,
+        "scene_capture_delay_ms": 500,
+        "viewport_override_delay_ms": 100
+    }
+}

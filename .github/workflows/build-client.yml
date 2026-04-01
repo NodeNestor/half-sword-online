@@ -1,0 +1,118 @@
+name: Build Client
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install pygame pyinstaller
+          pip install -r client/requirements.txt
+
+      - name: Build client exe
+        run: |
+          pyinstaller --onefile --windowed --name HalfSwordOnline `
+            --add-data "shared;shared" `
+            --add-data "config.json;." `
+            --hidden-import pygame `
+            --hidden-import shared.protocol `
+            --hidden-import shared.lobby `
+            --hidden-import shared.fec `
+            --hidden-import client.connect_ui `
+            --hidden-import client.lobby_ui `
+            --hidden-import client.audio_player `
+            client/__main__.py
+
+      - name: Upload client artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: HalfSwordOnline-Client-Windows
+          path: dist/HalfSwordOnline.exe
+
+  build-host:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install pyinstaller vgamepad pygame
+          pip install -r host/requirements.txt
+
+      - name: Build host exe
+        run: |
+          pyinstaller --onefile --console --name HalfSwordOnline-Host `
+            --add-data "shared;shared" `
+            --add-data "config.json;." `
+            --hidden-import shared.protocol `
+            --hidden-import shared.lobby `
+            --hidden-import shared.fec `
+            --hidden-import host.capture `
+            --hidden-import host.input_injector `
+            --hidden-import host.audio `
+            --hidden-import host.adaptive_bitrate `
+            --hidden-import host.session_manager `
+            --hidden-import host.dashboard `
+            --hidden-import client.connect_ui `
+            host/server.py
+
+      - name: Upload host artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: HalfSwordOnline-Host-Windows
+          path: dist/HalfSwordOnline-Host.exe
+
+  release:
+    needs: [build-windows, build-host]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: HalfSwordOnline-Client-Windows
+          path: artifacts/client
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: HalfSwordOnline-Host-Windows
+          path: artifacts/host
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: true
+          generate_release_notes: true
+          files: |
+            artifacts/client/HalfSwordOnline.exe
+            artifacts/host/HalfSwordOnline-Host.exe
+          body: |
+            ## Half Sword Online
+
+            ### For players (clients):
+            Download `HalfSwordOnline.exe` — no game purchase or Python needed.
+
+            ### For hosts:
+            Download `HalfSwordOnline-Host.exe` + install the UE4SS mods from the repo.
+            You need Half Sword installed.
+
+            ### Requirements
+            - **Client**: Windows, FFmpeg on PATH
+            - **Host**: Windows, Half Sword, UE4SS, ViGEmBus, FFmpeg on PATH

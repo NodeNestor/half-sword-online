@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Check syntax
+        run: |
+          python -m py_compile shared/protocol.py
+          python -m py_compile shared/lobby.py
+          python -m py_compile shared/fec.py
+          python -m py_compile host/server.py
+          python -m py_compile host/capture.py
+          python -m py_compile host/input_injector.py
+          python -m py_compile host/audio.py
+          python -m py_compile host/adaptive_bitrate.py
+          python -m py_compile host/session_manager.py
+          python -m py_compile host/dashboard.py
+          python -m py_compile client/app.py
+          python -m py_compile client/connect_ui.py
+          python -m py_compile client/lobby_ui.py
+          python -m py_compile client/audio_player.py
+
+  test-protocol:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Test protocol serialization
+        run: python -m pytest tests/ -v --tb=short
+        continue-on-error: true

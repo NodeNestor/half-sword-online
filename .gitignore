@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+*.spec
+venv/
+.venv/
+
+# C++ build
+mod/FrameExport/build/
+mod/FrameExport/out/
+mod/FrameExport/placeholder_sdk/
+*.obj
+*.lib
+*.dll
+*.exp
+*.pdb
+*.ilk
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+Thumbs.db
+.DS_Store
+
+# PyInstaller
+*.manifest
+
+# Bridge files (runtime IPC)
+mod_state.txt
+host_commands.txt
+team_config.txt
