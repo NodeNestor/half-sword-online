@@ -12,7 +12,7 @@ Architecture:
     2. On connect: tells the Lua mod to spawn a player (via bridge file)
     3. Waits for FrameExport C++ plugin to create shared memory for that slot
     4. Starts capture pipeline: SharedMemory → NVENC → UDP stream
-    5. Receives input from client → injects via ViGEmBus virtual gamepad
+    5. Receives input from client → injects via Windows SendInput
     6. Streams encoded video + audio back to client
 """
 
@@ -40,7 +40,7 @@ from shared.protocol import (
 )
 from shared.lobby import LobbyPacketType, LobbyState, SetTeamRequest, SetReadyRequest, ChatMessage
 from host.capture import PlayerPipeline, EncoderConfig
-from host.input_injector import InputInjectorManager, VirtualGamepad
+from host.input_injector import InputInjectorManager, InputInjector
 from host.session_manager import SessionManager
 from host.dashboard import HostDashboard
 from client.connect_ui import LANBeacon
@@ -100,7 +100,7 @@ class ConnectedClient:
     connected_at: float
     last_seen: float
     pipeline: Optional[PlayerPipeline] = None
-    gamepad: Optional[VirtualGamepad] = None
+    gamepad: Optional[InputInjector] = None
     seq_out: int = 0
     frame_number: int = 0
     # Stats

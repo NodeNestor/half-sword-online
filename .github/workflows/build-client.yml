@@ -52,7 +52,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install pyinstaller vgamepad pygame
+          pip install pyinstaller pygame
           pip install -r host/requirements.txt
 
       - name: Build host exe
@@ -115,4 +115,4 @@ jobs:
 
             ### Requirements
             - **Client**: Windows, FFmpeg on PATH
-            - **Host**: Windows, Half Sword, UE4SS, ViGEmBus, FFmpeg on PATH
+            - **Host**: Windows, Half Sword, UE4SS, FFmpeg on PATH

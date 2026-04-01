@@ -8,7 +8,7 @@
 --   3. Each SceneCapture renders to its own TextureRenderTarget2D at full res
 --   4. The C++ native plugin (FrameExport) reads render targets → shared memory
 --   5. Python host sidecar reads shared memory → NVENC encode → stream to clients
---   6. Remote input comes back via ViGEmBus virtual gamepads
+--   6. Remote input comes back via Windows SendInput (keyboard/mouse injection)
 --
 -- The host player (Player 1) plays normally — their viewport is unaffected.
 -- Remote players' viewports are captured offscreen via SceneCapture2D.
